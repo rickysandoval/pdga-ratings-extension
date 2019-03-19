@@ -1,6 +1,6 @@
 import { Round } from "../vos/round.vo";
 
-export function getIncludedRounds() {
+export function getIncludedRounds(): Round[] {
     let roundRows = document.querySelectorAll('#player-results-details tbody tr.included');
     let rounds = Array.from(roundRows).map(round => {
         let tournamentName = round.querySelector('.tournament a').textContent;
@@ -20,11 +20,15 @@ export function getIncludedRounds() {
             roundRating
         };
     });
-    console.log(rounds);
 
     return rounds;
 }
 
-export function getCurrentRating() {
-    return parseInt(document.querySelector('ul.player-info .current-rating').childNodes[2].textContent.trim());
+export function getCurrentRating(): number {
+    if (document.querySelector('ul.player-info .current-rating')) {
+        return Math.round(parseFloat(document.querySelector('ul.player-info .current-rating').childNodes[2].textContent.trim()));
+    } else {
+        return 0;
+    }
+    
 }
