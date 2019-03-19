@@ -14,7 +14,7 @@
             "*://*.pdga.com/player/*/details"
         ],
         "js": [
-            "js/ratings-detail.js"
+            "js/ratings-detail-page.js"
         ]
     }],
     "background": {

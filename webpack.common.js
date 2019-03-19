@@ -1,6 +1,6 @@
 module.exports = {
     entry: {
-        'ratings-detail': './src/js/content-scripts/ratings-detail.ts',
+        'ratings-detail-page': './src/js/content-scripts/ratings-detail-page.ts',
         'background': './src/js/background/background.ts'
     },
     module: {
