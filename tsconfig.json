@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+      "module": "es6",
+      "target": "es5",
+      "lib": ["es2015", "dom"],
+      "moduleResolution": "node",
+      "allowJs": true,
+      "outDir": "./dist/",
+      "noImplicitThis": true,
+      "typeRoots": ["node_modules/@types", "node_modules/web-ext-types"]
+    }
+  }

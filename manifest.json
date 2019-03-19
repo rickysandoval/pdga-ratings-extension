@@ -1,0 +1,27 @@
+{
+    "manifest_version": 2,
+    "name": "pdga-extension",
+    "author": "Ricky Sandoval",
+    "version": "0.1.0",
+    "description": "Extension to add useful features to the PDGA website for disc golfers ",
+    "permission": [
+        "*://*.pdga.com/*",
+        "storage",
+        "webNavigation"
+    ],
+    "content_scripts": [{
+        "matches": [
+            "*://*.pdga.com/player/*/details"
+        ],
+        "js": [
+            "js/ratings-detail.js"
+        ]
+    }],
+    "background": {
+        "scripts": [
+            "js/background.js"
+        ],
+        "persistent": true
+    }
+
+}

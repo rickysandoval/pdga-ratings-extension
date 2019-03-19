@@ -1,0 +1,11 @@
+{
+  "name": "pdga-extension",
+  "version": "0.1.0",
+  "description": "Extension to add useful features to the PDGA website for disc golfers ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ricky Sandoval",
+  "license": "ISC"
+}
