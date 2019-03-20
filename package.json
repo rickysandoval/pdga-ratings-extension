@@ -29,5 +29,9 @@
     "webpack-cli": "^3.3.0",
     "webpack-merge": "^4.2.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "bootstrap-vue": "^2.0.0-rc.15",
+    "vue": "^2.6.10",
+    "vue-rx": "^6.1.0"
+  }
 }
