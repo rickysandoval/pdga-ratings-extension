@@ -1,11 +1,19 @@
 import { Round } from "../vos/round.vo";
 import { calculateRating } from "../shared/ratings-utils";
 import { getIncludedRounds, getCurrentRating, getDoubleWeightedRoundRows, getPdgaNumber } from "../shared/ratings-detail-data-scraping";
+import { UserCreatedRoundsService } from "../services/user-created-rounds.service";
+import { map, tap } from "rxjs/operators";
 
 let rounds = getIncludedRounds();
 let currentRating = getCurrentRating();
 let pdgaNumber = getPdgaNumber();
-console.log(pdgaNumber);
+
+let savedRounds = UserCreatedRoundsService.savedRounds.pipe(
+    map(hash => hash[pdgaNumber] || {}),
+    map(hash => Object.values(hash))
+);
+
+savedRounds.subscribe(rounds => console.log(rounds));
 
 
 let extraRounds: Round[] = [{
@@ -42,7 +50,6 @@ let calculatedRating = calculateRating([...rounds, ...extraRounds]);
 
 console.log(`Calculated Rating: ${calculatedRating}`)
 console.log(`Actual Rating: ${currentRating}`);
-
 
 
 
