@@ -35,15 +35,31 @@
 
 .panel-adjusted-rating {
     margin-bottom: 2em;
+
     .adjusted-rating {
         font-size: 16px;
     }
+
     .clear-rounds {
         color: red;
+
         &:hover {
             color: red;
         }
     }
+}
+
+/* Table */
+#player-results-details {
+    tr.user-added-round.odd,
+    tr.user-added-round.odd td {
+        background: #f7fad4;
+    }
+    tr.user-added-round.even,
+    tr.user-added-round.even td {
+        background: #f9f9ea;
+    }
+
 }
 
 /* Add round modal */
