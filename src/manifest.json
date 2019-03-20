@@ -15,6 +15,9 @@
         ],
         "js": [
             "js/ratings-detail-page.js"
+        ],
+        "css": [
+            "styles/content-script.css"
         ]
     }],
     "background": {

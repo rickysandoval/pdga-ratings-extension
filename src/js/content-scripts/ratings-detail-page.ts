@@ -56,5 +56,5 @@ console.log(`Actual Rating: ${currentRating}`);
 let doubleWeightedRows = getDoubleWeightedRoundRows();
 
 doubleWeightedRows.forEach(element => {
-    element.querySelector('.round-rating').setAttribute('style', 'color: #3b9640;')
+    element.querySelector('.round-rating').classList.add('double-weighted-round');
 });

@@ -1,10 +1,16 @@
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 module.exports = {
     entry: {
         'ratings-detail-page': './src/js/content-scripts/ratings-detail-page.ts',
-        'background': './src/js/background/background.ts'
+        'background': './src/js/background/background.ts',
+        'content-script': ["./src/scss/content-script.scss"]
     },
     module: {
         rules: [{
+            test: /\.vue$/,
+            loader: 'vue-loader'
+        },{
             test: /\.ts$|\.tsx$/,
             use: {
                 loader: 'ts-loader',
@@ -28,9 +34,29 @@ module.exports = {
                     ]
                 }
             }
+        },{
+            test: /\.scss$/,
+            use: [
+                // fallback to style-loader in development
+                MiniCssExtractPlugin.loader,
+                // "style-loader",
+                "css-loader",
+                "sass-loader"
+            ]
         }]
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js']
-    }
+        extensions: ['.tsx', '.ts', '.js'],
+        alias: {
+            'vue$': 'vue/dist/vue.esm.js' // 'vue/dist/vue.common.js' for webpack 1
+        }
+    },
+    plugins: [
+        new MiniCssExtractPlugin({
+            // Options similar to the same options in webpackOptions.output
+            // both options are optional
+            filename: "../styles/[name].css",
+            chunkFilename: "[id].css"
+        })
+    ]
 }
