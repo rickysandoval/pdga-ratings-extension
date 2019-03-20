@@ -1,6 +1,7 @@
 <script>
 import { UserCreatedRoundsService } from "../services/user-created-rounds.service";
-import { map } from "rxjs/operators";
+import { map, tap, take, delay, concatMap, switchMap } from "rxjs/operators";
+import { from } from 'rxjs';
 import { roundSort } from "../shared/utils";
 
 export default {
@@ -11,8 +12,12 @@ export default {
     adjustedRating: Number,
     eventHub: Object
   },
-  created() {
+  data: function() {
+    return {
+      clearedRounds: null
+    };
   },
+  created() {},
   subscriptions: function() {
     return {
       rounds: UserCreatedRoundsService.savedRounds.pipe(
@@ -20,13 +25,38 @@ export default {
         map(hash => Object.values(hash)),
         map(rounds =>
           [...rounds].sort(roundSort).map(round => Object.assign({}, round))
-        )
+        ),
+        tap(rounds => {
+          if (rounds.length && this.clearedRounds) {
+            console.log("set to null");
+            this.clearedRounds = null;
+          }
+        })
       )
     };
   },
   methods: {
     openRound: function(round) {
       this.eventHub.$emit("openRound", JSON.parse(JSON.stringify(round)));
+    },
+    clearRounds: function() {
+      console.log("clear rounds");
+      this.$observables.rounds
+        .pipe(
+          take(1),
+          tap(rounds => {
+            console.log(rounds);
+            this.clearedRounds = rounds;
+          }),
+          switchMap(() => UserCreatedRoundsService.clearPlayer(this.pdgaNumber))
+        )
+        .subscribe();
+    },
+    undoClearRounds: function() {
+      let rounds = [...this.clearedRounds].map(round => JSON.parse(JSON.stringify(round)))
+      from(rounds).pipe(
+          concatMap(round => UserCreatedRoundsService.addRound(round, this.pdgaNumber))
+      ).subscribe();
     }
   }
 };
@@ -57,9 +87,21 @@ export default {
               </a>
             </li>
           </ul>
+          <p>
+            <a
+              href="#"
+              class="clear-rounds"
+              v-on:click.prevent="clearRounds()"
+            >Clear all added rounds</a>
+          </p>
         </template>
         <template v-if="!(rounds && rounds.length && adjustedRating)">
-          <p>Try adding some rounds to see how it will affect your rating</p>
+          <p v-if="clearedRounds">
+            <a href="#" v-on:click.prevent="undoClearRounds()">Undo clear rounds</a>
+          </p>
+          <p>
+            <a href="#" v-on:click.prevent="openRound(null)">Adding a round</a> to see how it will affect your rating
+          </p>
         </template>
       </div>
     </div>

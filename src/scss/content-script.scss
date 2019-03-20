@@ -38,6 +38,12 @@
     .adjusted-rating {
         font-size: 16px;
     }
+    .clear-rounds {
+        color: red;
+        &:hover {
+            color: red;
+        }
+    }
 }
 
 /* Add round modal */

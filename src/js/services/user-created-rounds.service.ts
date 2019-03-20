@@ -1,5 +1,5 @@
 
-import { Observable, BehaviorSubject} from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { shareReplay, mapTo, filter } from 'rxjs/operators';
 import { Round, SavedRound } from '../vos/round.vo';
 import { SAVED_ROUNDS_STORAGE_KEY } from '../shared/constants';
@@ -37,8 +37,8 @@ class UserCreatedRounds {
         let createdRound = <SavedRound>Object.assign({}, round, {
             id,
             pdgaNumber,
-            roundRating: parseInt(''+round.roundRating),
-            roundNumber: parseInt(''+round.roundNumber),
+            roundRating: parseInt('' + round.roundRating),
+            roundNumber: parseInt('' + round.roundNumber),
         });
         // console.log(round, createdRound);
 
@@ -75,6 +75,14 @@ class UserCreatedRounds {
         });
         return this.setStoredRounds(updatedRounds).pipe(
             mapTo(updatedRound)
+        );
+    }
+
+    clearPlayer(pdgaNumber: string) {
+        let savedRounds = Object.assign({}, this.savedRoundsSubject.getValue());
+        delete savedRounds[pdgaNumber]
+        return this.setStoredRounds(savedRounds).pipe(
+            mapTo(savedRounds)
         );
     }
 
