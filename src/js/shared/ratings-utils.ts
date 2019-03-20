@@ -1,16 +1,11 @@
 import { Round } from "../vos/round.vo";
+import { roundSort } from "./utils";
 
 export function calculateRating(rounds: Round[], asOfDate?: Date) {
     if (!rounds.length) {
         return 0;
     }
-    let sortedRounds = [...rounds].sort((a,b) => {
-        if (a.roundDate === b.roundDate) {
-            return a.roundNumber > b.roundNumber ? -1 : 1;
-        } else {
-            return a.roundDate > b.roundDate ? -1 : 1;
-        }
-    });
+    let sortedRounds = [...rounds].sort(roundSort);
     // Sort by date?
     // Number of rounds and date stuff
     // Calculate if round gets dropped

@@ -36,8 +36,11 @@ class UserCreatedRounds {
         let playerRounds = Object.assign({}, savedRounds[pdgaNumber] || {});
         let createdRound = <SavedRound>Object.assign({}, round, {
             id,
-            pdgaNumber
+            pdgaNumber,
+            roundRating: parseInt(''+round.roundRating),
+            roundNumber: parseInt(''+round.roundNumber),
         });
+        console.log(round, createdRound);
 
         playerRounds[id] = createdRound;
         let updatedRounds = Object.assign({}, savedRounds, {

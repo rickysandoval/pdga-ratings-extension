@@ -16,19 +16,21 @@ export default {
     };
   },
   created() {
-    console.dir(this.$root);
+      
   },
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
-      console.log(JSON.stringify(this.form));
+
+      let date = new Date(this.form.roundDate);
+      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
       let newRound = {
         tournamentName: this.form.tournamentName || "",
-        tournamentNumber: this.form.tournamentNumber || 1,
-        tournamentDate: new Date(this.form.tournamentDate).getTime(),
-        roundRating: this.form.roundRating
+        roundNumber: this.form.roundNumber || 1,
+        roundDate: date.getTime(),
+        roundRating: this.form.roundRating,
       };
-      // TODO loading feedback
       UserCreatedRoundsService.addRound(newRound, this.pdgaNumber).subscribe(
         () => {
           this.closeModal();
@@ -61,6 +63,7 @@ export default {
           <b-form-input
             id="roundNumber"
             type="number"
+            min="1"
             v-model="form.roundNumber"
             placeholder="Round Number"
           />
@@ -74,6 +77,7 @@ export default {
             id="roundRating"
             type="number"
             min="500"
+            max="1200"
             v-model="form.roundRating"
             placeholder="Round Rating"
           />

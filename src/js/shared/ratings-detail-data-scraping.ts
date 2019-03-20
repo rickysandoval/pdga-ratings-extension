@@ -1,4 +1,5 @@
 import { Round } from "../vos/round.vo";
+import { roundSort } from "./utils";
 
 export function getIncludedRounds(): Round[] {
     let roundRows = document.querySelectorAll('#player-results-details tbody tr.included');
@@ -16,13 +17,7 @@ export function getDoubleWeightedRoundRows() {
             round: roundFromRow(row)
         };
     });
-    rounds.sort((a,b) => {
-        if (a.round.roundDate === b.round.roundDate) {
-            return a.round.roundNumber > b.round.roundNumber ? -1 : 1;
-        } else {
-            return a.round.roundDate > b.round.roundDate ? -1 : 1;
-        }
-    });
+    rounds.sort(roundSort);
     let numDoubleRatedRounds = Math.round(rounds.length / 4);
     let doubleRatedRounds = rounds.slice(0,numDoubleRatedRounds);
 
@@ -49,7 +44,7 @@ function roundFromRow(roundElement: Element) {
         roundDateText = roundDateText.split(' to ')[1];
     }
 
-    let tournamentName = roundElement.querySelector('.tournament a').textContent;
+    let tournamentName = roundElement.querySelector('.tournament').textContent;
     let roundNumber = parseInt(roundElement.querySelector('.round').textContent);
     let roundDate = new Date(roundDateText).getTime();
     let roundRating = parseInt(roundElement.querySelector('.round-rating').textContent);
