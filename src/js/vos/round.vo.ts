@@ -1,5 +1,7 @@
 export interface Round {
-    roundName: string;
+    tournamentName: string;
+    roundNumber: number;
     roundDate: number;
     roundRating: number;
+
 }

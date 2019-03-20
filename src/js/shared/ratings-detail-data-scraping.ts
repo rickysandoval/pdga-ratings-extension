@@ -18,14 +18,13 @@ export function getDoubleWeightedRoundRows() {
     });
     rounds.sort((a,b) => {
         if (a.round.roundDate === b.round.roundDate) {
-            return a.round.roundName > b.round.roundName ? -1 : 1;
+            return a.round.roundNumber > b.round.roundNumber ? -1 : 1;
         } else {
             return a.round.roundDate > b.round.roundDate ? -1 : 1;
         }
     });
     let numDoubleRatedRounds = Math.round(rounds.length / 4);
     let doubleRatedRounds = rounds.slice(0,numDoubleRatedRounds);
-
 
     return doubleRatedRounds.map(round => round.element);
 }
@@ -37,24 +36,27 @@ export function getCurrentRating(): number {
     } else {
         return 0;
     }
+}
 
+export function getPdgaNumber(): string {
+    return document.querySelector('.pane-page-title h1').textContent.split('#')[1];
 }
 
 
 function roundFromRow(roundElement: Element) {
-    let tournamentName = roundElement.querySelector('.tournament a').textContent;
-    let roundNumber = roundElement.querySelector('.round').textContent;
     let roundDateText = roundElement.querySelector('.date').textContent;
     if (roundDateText.indexOf(' to ') >= 0) {
         roundDateText = roundDateText.split(' to ')[1];
     }
 
-    let roundName = `${tournamentName} - Round ${roundNumber}`;
+    let tournamentName = roundElement.querySelector('.tournament a').textContent;
+    let roundNumber = parseInt(roundElement.querySelector('.round').textContent);
     let roundDate = new Date(roundDateText).getTime();
     let roundRating = parseInt(roundElement.querySelector('.round-rating').textContent);
 
     return <Round>{
-        roundName,
+        tournamentName,
+        roundNumber,
         roundDate,
         roundRating
     };

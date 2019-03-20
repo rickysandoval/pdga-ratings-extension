@@ -6,7 +6,7 @@ export function calculateRating(rounds: Round[], asOfDate?: Date) {
     }
     let sortedRounds = [...rounds].sort((a,b) => {
         if (a.roundDate === b.roundDate) {
-            return a.roundName > b.roundName ? -1 : 1;
+            return a.roundNumber > b.roundNumber ? -1 : 1;
         } else {
             return a.roundDate > b.roundDate ? -1 : 1;
         }
