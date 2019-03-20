@@ -60,6 +60,14 @@
         margin-left: 5px;
         margin-top: 25px;
     }
+
+    .delete-round {
+        position: absolute;
+        left: 1rem;
+        bottom: 1rem;
+        color: red !important;
+        cursor: pointer;
+    }
 }
 
 .modal-wrapper {

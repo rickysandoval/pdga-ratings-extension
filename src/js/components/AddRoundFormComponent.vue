@@ -56,6 +56,13 @@ export default {
     closeModal() {
       this.$root.$destroy();
       document.body.removeChild(this.$root.$el);
+    },
+    deleteRound() {
+        UserCreatedRoundsService.removeRound(this.savedRound).subscribe(
+          () => {
+            this.closeModal();
+          }
+        );
     }
   }
 };
@@ -101,6 +108,7 @@ export default {
             placeholder="Round Rating"
           />
           <div class="cf">
+            <a class="delete-round" v-if="savedRound" v-on:click="deleteRound()">Delete</a>
             <b-button type="submit" variant="primary">Submit</b-button>
             <b-button type="reset">Reset</b-button>
           </div>

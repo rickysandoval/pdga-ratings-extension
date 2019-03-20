@@ -40,7 +40,7 @@ class UserCreatedRounds {
             roundRating: parseInt(''+round.roundRating),
             roundNumber: parseInt(''+round.roundNumber),
         });
-        console.log(round, createdRound);
+        // console.log(round, createdRound);
 
         playerRounds[id] = createdRound;
         let updatedRounds = Object.assign({}, savedRounds, {

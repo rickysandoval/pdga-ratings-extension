@@ -57,9 +57,6 @@ documentReady(() => {
 
         addRoundsAndFormat(userAddedRounds);
         AdjustedRatingApp.adjustedRating = calculatedRating;
-
-        console.log(`Calculated Rating: ${calculatedRating}`)
-        console.log(`Actual Rating: ${currentRating}`);
     });
 
     let userRoundControls = document.createElement('div');
