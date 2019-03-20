@@ -1,6 +1,6 @@
 import { Round, SavedRound } from "../vos/round.vo";
 import { calculateRating } from "../shared/ratings-utils";
-import { getIncludedRounds, getCurrentRating, getDoubleWeightedRoundRows, getPdgaNumber } from "../shared/ratings-detail-data-scraping";
+import { getIncludedRounds, getCurrentRating, getPdgaNumber, addRoundsAndFormat } from "../shared/ratings-detail-dom-manipulation";
 import Vue from 'vue';
 import VueRx from 'vue-rx';
 import BootstrapVue from 'bootstrap-vue';
@@ -9,6 +9,7 @@ import { map, tap } from "rxjs/operators";
 import { UserCreatedRoundsService } from "../services/user-created-rounds.service";
 import { documentReady, roundSort } from "../shared/utils";
 import AddRoundFormComponent from '../components/AddRoundFormComponent.vue';
+import AdjustedRatingComponent from '../components/AdjustedRatingComponent.vue';
 
 Vue.use(VueRx);
 Vue.use(BootstrapVue);
@@ -20,6 +21,24 @@ documentReady(() => {
     let currentRating = getCurrentRating();
     let pdgaNumber = getPdgaNumber();
 
+    /* Create page sections */
+    createAdjustedRatingNode();
+    let AdjustedRatingApp = new Vue({
+        el: '#adjusted-rating-node',
+        render: function(h) {
+            return h(AdjustedRatingComponent, {
+                props: {
+                    pdgaNumber,
+                    currentRating,
+                    adjustedRating: this.adjustedRating
+                }
+            });
+        },
+        data: {
+            adjustedRating: null
+        }
+    });
+
     const savedRounds = UserCreatedRoundsService.savedRounds.pipe(
         map(hash => hash[pdgaNumber] || {}),
         map(hash => Object.values(hash)),
@@ -29,7 +48,9 @@ documentReady(() => {
         console.log(userAddedRounds);
 
         let calculatedRating = calculateRating([...userAddedRounds, ...rounds]);
+
         addRoundsAndFormat(userAddedRounds);
+        AdjustedRatingApp.adjustedRating = calculatedRating;
 
         console.log(`Calculated Rating: ${calculatedRating}`)
         console.log(`Actual Rating: ${currentRating}`);
@@ -50,6 +71,12 @@ documentReady(() => {
     userRoundControls.appendChild(addRoundLink);
 });
 
+function createAdjustedRatingNode() {
+    let node = document.createElement('div');
+    node.id = 'adjusted-rating-node'
+    document.querySelector('.panel-display > .panel-panel > .inside').insertBefore(node, document.querySelector('.pane-player-player-stats'));
+}
+
 function openAddRoundForm(pdgaNumber: string) {
     let node = document.createElement('div');
     node.id = 'add-rating-modal'
@@ -65,40 +92,7 @@ function openAddRoundForm(pdgaNumber: string) {
     });
 }
 
-function addRoundsAndFormat(rounds: SavedRound[]) {
-    Array.from(document.querySelectorAll('.double-weighted-round')).forEach(element => element.classList.remove('double-weighted-round'));
-    Array.from(document.querySelectorAll('.user-added-round')).forEach(element => element.parentElement.removeChild(element));
 
-    const tableBody = document.querySelector('#player-results-details tbody');
-
-    [...rounds].reverse().forEach((round, idx) => {
-        let date = new Date(round.roundDate).toLocaleDateString('en-US', {
-            day: 'numeric',
-            year: 'numeric',
-            month: 'short'
-        });
-        let roundRow = document.createElement('tr');
-        roundRow.classList.add('user-added-round');
-        roundRow.classList.add('included');
-        roundRow.classList.add(idx % 2 === 0 ? 'even' : 'odd');
-        roundRow.innerHTML = `
-            <td class="tournament">${round.tournamentName}</td>
-            <td class="tier"></td>
-            <td class="date">${date}</td>
-            <td class="round">${round.roundNumber}</td>
-            <td class="score"></td>
-            <td class="round-rating">${round.roundRating}</td>
-            <td class="evaluated"></td>
-            <td class="included"></td>
-        `;
-        tableBody.insertBefore(roundRow, tableBody.firstChild);
-    });
-
-    let doubleWeightedRows = getDoubleWeightedRoundRows();
-    doubleWeightedRows.forEach(element => {
-        element.querySelector('.round-rating').classList.add('double-weighted-round');
-    });
-}
 
 
 

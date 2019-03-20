@@ -1,4 +1,4 @@
-import { Round } from "../vos/round.vo";
+import { Round, SavedRound } from "../vos/round.vo";
 import { roundSort } from "./utils";
 
 export function getIncludedRounds(): Round[] {
@@ -55,4 +55,39 @@ function roundFromRow(roundElement: Element) {
         roundDate,
         roundRating
     };
+}
+
+export function addRoundsAndFormat(rounds: SavedRound[]) {
+    Array.from(document.querySelectorAll('.double-weighted-round')).forEach(element => element.classList.remove('double-weighted-round'));
+    Array.from(document.querySelectorAll('.user-added-round')).forEach(element => element.parentElement.removeChild(element));
+
+    const tableBody = document.querySelector('#player-results-details tbody');
+
+    [...rounds].reverse().forEach((round, idx) => {
+        let date = new Date(round.roundDate).toLocaleDateString('en-US', {
+            day: 'numeric',
+            year: 'numeric',
+            month: 'short'
+        });
+        let roundRow = document.createElement('tr');
+        roundRow.classList.add('user-added-round');
+        roundRow.classList.add('included');
+        roundRow.classList.add(idx % 2 === 0 ? 'even' : 'odd');
+        roundRow.innerHTML = `
+            <td class="tournament">${round.tournamentName}</td>
+            <td class="tier"></td>
+            <td class="date">${date}</td>
+            <td class="round">${round.roundNumber}</td>
+            <td class="score"></td>
+            <td class="round-rating">${round.roundRating}</td>
+            <td class="evaluated"></td>
+            <td class="included"></td>
+        `;
+        tableBody.insertBefore(roundRow, tableBody.firstChild);
+    });
+
+    let doubleWeightedRows = getDoubleWeightedRoundRows();
+    doubleWeightedRows.forEach(element => {
+        element.querySelector('.round-rating').classList.add('double-weighted-round');
+    });
 }
