@@ -8,11 +8,10 @@ export default {
   props: {
     pdgaNumber: String,
     currentRating: Number,
-    adjustedRating: Number
+    adjustedRating: Number,
+    eventHub: Object
   },
   created() {
-    console.log(this.currentRating);
-    console.log(this.adjustedRating);
   },
   subscriptions: function() {
     return {
@@ -24,6 +23,11 @@ export default {
         )
       )
     };
+  },
+  methods: {
+    openRound: function(round) {
+      this.eventHub.$emit("openRound", JSON.parse(JSON.stringify(round)));
+    }
   }
 };
 </script>
@@ -46,14 +50,16 @@ export default {
           <p>Based on {{rounds.length}} new rounds:</p>
           <ul class="info-list">
             <li v-for="round in rounds">
-              <span v-if="round.tournamentName">{{round.tournamentName}}</span>
-              <span v-if="round.roundNumber">Rd {{round.roundNumber}} -</span>
-              <strong>{{round.roundRating}}</strong>
+              <a href="#" v-on:click.prevent="openRound(round)">
+                <span v-if="round.tournamentName">{{round.tournamentName}}</span>
+                <span v-if="round.roundNumber">Rd {{round.roundNumber}} -</span>
+                <strong>{{round.roundRating}}</strong>
+              </a>
             </li>
           </ul>
         </template>
         <template v-if="!(rounds && rounds.length && adjustedRating)">
-            <p>Try adding some rounds to see how it will affect your rating</p>
+          <p>Try adding some rounds to see how it will affect your rating</p>
         </template>
       </div>
     </div>

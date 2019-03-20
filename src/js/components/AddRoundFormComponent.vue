@@ -3,7 +3,8 @@ import { UserCreatedRoundsService } from "../services/user-created-rounds.servic
 export default {
   name: "add-round-form",
   props: {
-    pdgaNumber: String
+    pdgaNumber: String,
+    savedRound: Object
   },
   data: function() {
     return {
@@ -16,7 +17,14 @@ export default {
     };
   },
   created() {
-      
+    console.log(this.savedRound);
+    if (this.savedRound) {
+      Object.assign(this.form, this.savedRound, {
+        roundDate: new Date(this.savedRound.roundDate)
+          .toISOString()
+          .substring(0, 10)
+      });
+    }
   },
   methods: {
     onSubmit(evt) {
@@ -29,13 +37,21 @@ export default {
         tournamentName: this.form.tournamentName || "",
         roundNumber: this.form.roundNumber || 1,
         roundDate: date.getTime(),
-        roundRating: this.form.roundRating,
+        roundRating: this.form.roundRating
       };
-      UserCreatedRoundsService.addRound(newRound, this.pdgaNumber).subscribe(
-        () => {
-          this.closeModal();
-        }
-      );
+      if (this.savedRound) {
+        UserCreatedRoundsService.updateRound(this.savedRound, newRound).subscribe(
+          () => {
+            this.closeModal();
+          }
+        );
+      } else {
+        UserCreatedRoundsService.addRound(newRound, this.pdgaNumber).subscribe(
+          () => {
+            this.closeModal();
+          }
+        );
+      }
     },
     closeModal() {
       this.$root.$destroy();
@@ -49,7 +65,10 @@ export default {
     <div class="modal-click-off" v-on:click="closeModal()"></div>
     <div class="modal-container">
       <header class="modal-header">
-        <h1>Add new round</h1>
+        <h1>
+          <span v-if="!savedRound">Add new round</span>
+          <span v-if="savedRound">Edit saved round</span>
+        </h1>
         <span class="modal-close" v-on:click="closeModal()">x</span>
       </header>
       <section class="modal-body">

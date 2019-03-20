@@ -65,6 +65,19 @@ class UserCreatedRounds {
         );
     }
 
+    updateRound(roundToUpdate: SavedRound, round: Round) {
+        let savedRounds = this.savedRoundsSubject.getValue();
+        let updatedPlayerRounds = Object.assign({}, savedRounds[roundToUpdate.pdgaNumber] || {});
+        let updatedRound = Object.assign({}, roundToUpdate, round);
+        updatedPlayerRounds[roundToUpdate.id] = updatedRound;
+        let updatedRounds = Object.assign({}, savedRounds, {
+            [roundToUpdate.pdgaNumber]: updatedPlayerRounds
+        });
+        return this.setStoredRounds(updatedRounds).pipe(
+            mapTo(updatedRound)
+        );
+    }
+
     private setStoredRounds = storedDataSetter<SimpleHash<SimpleHash<SavedRound>>>(SAVED_ROUNDS_STORAGE_KEY);
     private getStoredRounds = storedDataGetter<SimpleHash<SimpleHash<SavedRound>>>(SAVED_ROUNDS_STORAGE_KEY, {});
 

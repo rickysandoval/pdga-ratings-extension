@@ -14,12 +14,14 @@ import AdjustedRatingComponent from '../components/AdjustedRatingComponent.vue';
 Vue.use(VueRx);
 Vue.use(BootstrapVue);
 
+const eventHub = new Vue()
+
 
 documentReady(() => {
     /** Get Data */
-    let rounds = getIncludedRounds();
-    let currentRating = getCurrentRating();
-    let pdgaNumber = getPdgaNumber();
+    const includedRounds = getIncludedRounds();
+    const currentRating = getCurrentRating();
+    const pdgaNumber = getPdgaNumber();
 
     /* Create page sections */
     createAdjustedRatingNode();
@@ -30,13 +32,17 @@ documentReady(() => {
                 props: {
                     pdgaNumber,
                     currentRating,
-                    adjustedRating: this.adjustedRating
+                    adjustedRating: this.adjustedRating,
+                    eventHub
                 }
             });
         },
         data: {
             adjustedRating: null
         }
+    });
+    eventHub.$on('openRound', (msg) => {
+        openAddRoundForm(pdgaNumber, msg)
     });
 
     const savedRounds = UserCreatedRoundsService.savedRounds.pipe(
@@ -47,7 +53,7 @@ documentReady(() => {
     savedRounds.subscribe(userAddedRounds => {
         console.log(userAddedRounds);
 
-        let calculatedRating = calculateRating([...userAddedRounds, ...rounds]);
+        let calculatedRating = calculateRating([...userAddedRounds, ...includedRounds]);
 
         addRoundsAndFormat(userAddedRounds);
         AdjustedRatingApp.adjustedRating = calculatedRating;
@@ -77,7 +83,7 @@ function createAdjustedRatingNode() {
     document.querySelector('.panel-display > .panel-panel > .inside').insertBefore(node, document.querySelector('.pane-player-player-stats'));
 }
 
-function openAddRoundForm(pdgaNumber: string) {
+function openAddRoundForm(pdgaNumber: string, savedRound?: SavedRound) {
     let node = document.createElement('div');
     node.id = 'add-rating-modal'
     document.body.appendChild(node);
@@ -86,7 +92,8 @@ function openAddRoundForm(pdgaNumber: string) {
         el: '#add-rating-modal',
         render: h => h(AddRoundFormComponent, {
             props: {
-                pdgaNumber
+                pdgaNumber,
+                savedRound
             }
         })
     });
