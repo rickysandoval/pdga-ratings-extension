@@ -71,7 +71,12 @@ export function addRoundsAndFormat(rounds: SavedRound[]) {
         });
         let roundRow = document.createElement('tr');
         roundRow.classList.add('user-added-round');
-        roundRow.classList.add('included');
+        if (!round.dropped) {
+            roundRow.classList.add('included');
+        } else {
+            roundRow.classList.add('not-included');
+        }
+        
         roundRow.classList.add(idx % 2 === 0 ? 'even' : 'odd');
         roundRow.innerHTML = `
             <td class="tournament">${round.tournamentName}</td>

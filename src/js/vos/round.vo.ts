@@ -8,4 +8,5 @@ export interface Round {
 export interface SavedRound extends Round {
     id: string;
     pdgaNumber: string;
+    dropped: boolean;
 }

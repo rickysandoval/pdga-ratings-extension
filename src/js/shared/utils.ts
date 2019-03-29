@@ -1,4 +1,5 @@
 import { isProd } from "./constants";
+import { Round } from "../vos/round.vo";
 
 export function debugLog(...args) {
     if (!isProd) {
@@ -30,4 +31,15 @@ export function roundSort(a,b) {
     } else {
         return a.roundDate > b.roundDate ? -1 : 1;
     }
+}
+
+export function getStandardDeviation(rounds: Round[]) {
+    let mean = rounds.reduce((accum, next) => {
+        return accum + next.roundRating;
+    }, 0) / rounds.length;
+    let sigma = rounds.reduce((accum, next) => {
+        let diff = next.roundRating - mean;
+        return accum + (diff * diff);
+    }, 0);
+    return Math.sqrt(sigma/rounds.length);
 }

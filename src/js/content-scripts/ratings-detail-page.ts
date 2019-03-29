@@ -7,7 +7,7 @@ import BootstrapVue from 'bootstrap-vue';
 import { map, tap } from "rxjs/operators";
 
 import { UserCreatedRoundsService } from "../services/user-created-rounds.service";
-import { documentReady, roundSort } from "../shared/utils";
+import { documentReady, roundSort, getStandardDeviation } from "../shared/utils";
 import AddRoundFormComponent from '../components/AddRoundFormComponent.vue';
 import AdjustedRatingComponent from '../components/AdjustedRatingComponent.vue';
 
@@ -52,8 +52,7 @@ documentReady(() => {
     );
     savedRounds.subscribe(userAddedRounds => {
         console.log(userAddedRounds);
-
-        let calculatedRating = calculateRating([...userAddedRounds, ...includedRounds]);
+        let calculatedRating = calculateRating([...userAddedRounds.filter(round => !round.dropped), ...includedRounds]);
 
         addRoundsAndFormat(userAddedRounds);
         AdjustedRatingApp.adjustedRating = calculatedRating;

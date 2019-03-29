@@ -60,6 +60,11 @@
         background: #f9f9ea;
     }
 
+    tr.user-added-round.not-included,
+    tr.user-added-round.not-included td {
+        background: #ffebeb;
+    }
+
 }
 
 /* Add round modal */

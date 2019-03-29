@@ -84,6 +84,7 @@ export default {
                 <span v-if="round.tournamentName">{{round.tournamentName}}</span>
                 <span v-if="round.roundNumber">Rd {{round.roundNumber}} -</span>
                 <strong>{{round.roundRating}}</strong>
+                <span v-if="round.dropped"> (DROPPED)</span>
               </a>
             </li>
           </ul>
