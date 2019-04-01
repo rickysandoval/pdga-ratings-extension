@@ -42,7 +42,7 @@ class UserCreatedRounds {
         let savedRounds = this.savedRoundsSubject.getValue();
         let playerRounds = Object.assign({}, savedRounds[pdgaNumber] || {});
         let newRoundRating = parseInt('' + round.roundRating);
-        let dropped = this.currentRating - newRoundRating > 100 || this.currentRating - newRoundRating < (2.5*this.standardDeviation);
+        let dropped = this.currentRating - newRoundRating > 100 || this.currentRating - newRoundRating > (2.5*this.standardDeviation);
         let createdRound = <SavedRound>Object.assign({}, round, {
             id,
             pdgaNumber,
@@ -51,6 +51,7 @@ class UserCreatedRounds {
             roundNumber: parseInt('' + round.roundNumber),
         });
         // console.log(round, createdRound);
+        // TODO: when ratings updated, re-calculate dropped rounds
 
         playerRounds[id] = createdRound;
         let updatedRounds = Object.assign({}, savedRounds, {
@@ -80,7 +81,7 @@ class UserCreatedRounds {
         let updatedPlayerRounds = Object.assign({}, savedRounds[roundToUpdate.pdgaNumber] || {});
 
         let newRoundRating = parseInt('' + round.roundRating);
-        let dropped = this.currentRating - newRoundRating > 100 || this.currentRating - newRoundRating < (2.5*this.standardDeviation);
+        let dropped = this.currentRating - newRoundRating > 100 || this.currentRating - newRoundRating > (2.5*this.standardDeviation);
 
         let updatedRound = Object.assign({}, roundToUpdate, round, {
             dropped
