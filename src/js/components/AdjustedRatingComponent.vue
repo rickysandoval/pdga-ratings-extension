@@ -28,7 +28,6 @@ export default {
         ),
         tap(rounds => {
           if (rounds.length && this.clearedRounds) {
-            console.log("set to null");
             this.clearedRounds = null;
           }
         })
@@ -40,12 +39,10 @@ export default {
       this.eventHub.$emit("openRound", JSON.parse(JSON.stringify(round)));
     },
     clearRounds: function() {
-      console.log("clear rounds");
       this.$observables.rounds
         .pipe(
           take(1),
           tap(rounds => {
-            console.log(rounds);
             this.clearedRounds = rounds;
           }),
           switchMap(() => UserCreatedRoundsService.clearPlayer(this.pdgaNumber))

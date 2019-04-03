@@ -17,7 +17,6 @@ export default {
     };
   },
   created() {
-    console.log(this.savedRound);
     if (this.savedRound) {
       Object.assign(this.form, this.savedRound, {
         roundDate: new Date(this.savedRound.roundDate)

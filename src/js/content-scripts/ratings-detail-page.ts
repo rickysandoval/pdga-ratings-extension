@@ -51,7 +51,7 @@ documentReady(() => {
         map(rounds => [...rounds].sort(roundSort))
     );
     savedRounds.subscribe(userAddedRounds => {
-        console.log(userAddedRounds);
+        // console.log(userAddedRounds);
         let calculatedRating = calculateRating([...userAddedRounds.filter(round => !round.dropped), ...includedRounds]);
 
         addRoundsAndFormat(userAddedRounds);
