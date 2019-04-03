@@ -4,7 +4,8 @@
   "description": "Extension to add useful features to the PDGA website for disc golfers ",
   "main": "index.js",
   "scripts": {
-    "start": "webpack --config webpack.dev.js --watch"
+    "start": "webpack --config webpack.dev.js --watch",
+    "build": "webpack --config webpack.prod.js"
   },
   "author": "Ricky Sandoval",
   "license": "ISC",
