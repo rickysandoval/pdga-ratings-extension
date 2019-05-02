@@ -33,12 +33,14 @@ documentReady(() => {
                     pdgaNumber,
                     currentRating,
                     adjustedRating: this.adjustedRating,
-                    eventHub
+                    eventHub,
+                    droppedRounds: this.droppedRounds
                 }
             });
         },
         data: {
-            adjustedRating: null
+            adjustedRating: null,
+            droppedRounds: []
         }
     });
     eventHub.$on('openRound', (msg) => {
@@ -51,11 +53,22 @@ documentReady(() => {
         map(rounds => [...rounds].sort(roundSort))
     );
     savedRounds.subscribe(userAddedRounds => {
-        // console.log(userAddedRounds);
-        let calculatedRating = calculateRating([...userAddedRounds.filter(round => !round.dropped), ...includedRounds]);
+        let lastAddedRoundDate = userAddedRounds[0].roundDate;
+        let droppedIncludedRounds = [];
+        let nonDroppedIncludedRounds = [];
+        includedRounds.forEach(round => {
+            
+            if (lastAddedRoundDate - round.roundDate > 31536000000) {
+                droppedIncludedRounds.push(round)
+            } else {
+                nonDroppedIncludedRounds.push(round)
+            }
+        });
 
+        let calculatedRating = calculateRating([...userAddedRounds.filter(round => !round.dropped), ...nonDroppedIncludedRounds]);
         addRoundsAndFormat(userAddedRounds);
         AdjustedRatingApp.adjustedRating = calculatedRating;
+        AdjustedRatingApp.droppedRounds = droppedIncludedRounds;
     });
 
     let userRoundControls = document.createElement('div');

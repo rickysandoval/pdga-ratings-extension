@@ -19,7 +19,7 @@ export function getDoubleWeightedRoundRows() {
     });
     rounds.sort(roundSort);
     let numDoubleRatedRounds = Math.round(rounds.length / 4);
-    let doubleRatedRounds = rounds.slice(0,numDoubleRatedRounds);
+    let doubleRatedRounds = rounds.slice(0, numDoubleRatedRounds);
 
     return doubleRatedRounds.map(round => round.element);
 }
@@ -60,9 +60,36 @@ function roundFromRow(roundElement: Element) {
 export function addRoundsAndFormat(rounds: SavedRound[]) {
     Array.from(document.querySelectorAll('.double-weighted-round')).forEach(element => element.classList.remove('double-weighted-round'));
     Array.from(document.querySelectorAll('.user-added-round')).forEach(element => element.parentElement.removeChild(element));
+    Array.from(document.querySelectorAll('.not-included.user-adjusted')).forEach(element => {
+        element.classList.remove('not-included');
+        element.classList.remove('user-adjusted');
+        element.classList.remove('not-evaluated');
+        element.classList.add('included');
+        element.classList.add('evaluated');
+    });
+    
+    let lastAddedRoundDate = rounds[0].roundDate;
+    let includedRoundRows = Array.from(document.querySelectorAll('#player-results-details tbody tr.included'));
+
+    includedRoundRows.forEach(roundElement => {
+        let roundDateText = roundElement.querySelector('.date').textContent;
+        if (roundDateText.indexOf(' to ') >= 0) {
+            roundDateText = roundDateText.split(' to ')[1];
+        }
+
+        let roundDate = new Date(roundDateText).getTime();
+        if (lastAddedRoundDate - roundDate > 31536000000) {
+            roundElement.classList.remove('included');
+            roundElement.classList.remove('evaluated');
+            roundElement.classList.add('not-included');
+            roundElement.classList.add('user-adjusted');
+            roundElement.classList.add('not-evaluated');
+        }
+    });
+
 
     const tableBody = document.querySelector('#player-results-details tbody');
-
+    
     [...rounds].reverse().forEach((round, idx) => {
         let date = new Date(round.roundDate).toLocaleDateString('en-US', {
             day: 'numeric',
@@ -76,7 +103,7 @@ export function addRoundsAndFormat(rounds: SavedRound[]) {
         } else {
             roundRow.classList.add('not-included');
         }
-        
+
         roundRow.classList.add(idx % 2 === 0 ? 'even' : 'odd');
         roundRow.innerHTML = `
             <td class="tournament">${round.tournamentName}</td>

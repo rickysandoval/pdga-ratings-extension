@@ -1,7 +1,7 @@
 <script>
 import { UserCreatedRoundsService } from "../services/user-created-rounds.service";
 import { map, tap, take, delay, concatMap, switchMap } from "rxjs/operators";
-import { from } from 'rxjs';
+import { from } from "rxjs";
 import { roundSort } from "../shared/utils";
 
 export default {
@@ -10,7 +10,8 @@ export default {
     pdgaNumber: String,
     currentRating: Number,
     adjustedRating: Number,
-    eventHub: Object
+    eventHub: Object,
+    droppedRounds: Array
   },
   data: function() {
     return {
@@ -50,10 +51,16 @@ export default {
         .subscribe();
     },
     undoClearRounds: function() {
-      let rounds = [...this.clearedRounds].map(round => JSON.parse(JSON.stringify(round)))
-      from(rounds).pipe(
-          concatMap(round => UserCreatedRoundsService.addRound(round, this.pdgaNumber))
-      ).subscribe();
+      let rounds = [...this.clearedRounds].map(round =>
+        JSON.parse(JSON.stringify(round))
+      );
+      from(rounds)
+        .pipe(
+          concatMap(round =>
+            UserCreatedRoundsService.addRound(round, this.pdgaNumber)
+          )
+        )
+        .subscribe();
     }
   }
 };
@@ -81,10 +88,22 @@ export default {
                 <span v-if="round.tournamentName">{{round.tournamentName}}</span>
                 <span v-if="round.roundNumber">Rd {{round.roundNumber}} -</span>
                 <strong>{{round.roundRating}}</strong>
-                <span v-if="round.dropped"> (DROPPED)</span>
+                <span v-if="round.dropped">(DROPPED)</span>
               </a>
             </li>
           </ul>
+          <template v-if="droppedRounds.length">
+            <p>And dropping {{droppedRounds.length}} old rounds over 1 year old:</p>
+            <ul class="info-list">
+              <li v-for="round in droppedRounds">
+                <div>
+                  <span v-if="round.tournamentName">{{round.tournamentName}}</span>
+                  <span v-if="round.roundNumber">Rd {{round.roundNumber}} -</span>
+                  <strong>{{round.roundRating}}</strong>
+                </div>
+              </li>
+            </ul>
+          </template>
           <p>
             <a
               href="#"
