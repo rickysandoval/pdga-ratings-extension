@@ -68,7 +68,7 @@ export function addRoundsAndFormat(rounds: SavedRound[]) {
         element.classList.add('evaluated');
     });
     
-    let lastAddedRoundDate = rounds[0].roundDate;
+    let lastAddedRoundDate = rounds.length ? rounds[0].roundDate : null;
     let includedRoundRows = Array.from(document.querySelectorAll('#player-results-details tbody tr.included'));
 
     includedRoundRows.forEach(roundElement => {
@@ -78,7 +78,7 @@ export function addRoundsAndFormat(rounds: SavedRound[]) {
         }
 
         let roundDate = new Date(roundDateText).getTime();
-        if (lastAddedRoundDate - roundDate > 31536000000) {
+        if (lastAddedRoundDate && lastAddedRoundDate - roundDate > 31536000000) {
             roundElement.classList.remove('included');
             roundElement.classList.remove('evaluated');
             roundElement.classList.add('not-included');

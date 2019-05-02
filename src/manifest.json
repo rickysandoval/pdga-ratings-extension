@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "PDGA Rating Tools",
     "author": "Ricky Sandoval",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Extension to add useful features to the PDGA website's Ratings Detail page for disc golfers ",
     "permissions": [
         "*://*.pdga.com/*",

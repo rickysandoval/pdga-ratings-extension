@@ -53,17 +53,22 @@ documentReady(() => {
         map(rounds => [...rounds].sort(roundSort))
     );
     savedRounds.subscribe(userAddedRounds => {
-        let lastAddedRoundDate = userAddedRounds[0].roundDate;
         let droppedIncludedRounds = [];
         let nonDroppedIncludedRounds = [];
-        includedRounds.forEach(round => {
+        if (userAddedRounds.length) {
+            let lastAddedRoundDate = userAddedRounds[0].roundDate;
+            includedRounds.forEach(round => {
             
-            if (lastAddedRoundDate - round.roundDate > 31536000000) {
-                droppedIncludedRounds.push(round)
-            } else {
-                nonDroppedIncludedRounds.push(round)
-            }
-        });
+                if (lastAddedRoundDate - round.roundDate > 31536000000) {
+                    droppedIncludedRounds.push(round)
+                } else {
+                    nonDroppedIncludedRounds.push(round)
+                }
+            });
+        } else {
+            nonDroppedIncludedRounds = [...includedRounds];
+        }
+       
 
         let calculatedRating = calculateRating([...userAddedRounds.filter(round => !round.dropped), ...nonDroppedIncludedRounds]);
         addRoundsAndFormat(userAddedRounds);
