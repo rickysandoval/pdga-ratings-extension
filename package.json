@@ -1,6 +1,6 @@
 {
   "name": "pdga-extension",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Extension to add useful features to the PDGA website for disc golfers ",
   "main": "index.js",
   "scripts": {
