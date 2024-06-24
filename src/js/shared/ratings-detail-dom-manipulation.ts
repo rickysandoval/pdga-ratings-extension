@@ -109,6 +109,7 @@ export function addRoundsAndFormat(rounds: SavedRound[]) {
             <td class="tournament">${round.tournamentName}</td>
             <td class="tier"></td>
             <td class="date">${date}</td>
+            <td class="division"></td>
             <td class="round">${round.roundNumber}</td>
             <td class="score"></td>
             <td class="round-rating">${round.roundRating}</td>

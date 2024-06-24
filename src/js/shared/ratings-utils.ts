@@ -1,7 +1,8 @@
 import { Round } from "../vos/round.vo";
-import { roundSort } from "./utils";
+import { debugLog, roundSort } from "./utils";
 
 export function calculateRating(rounds: Round[], asOfDate?: Date) {
+    debugLog('Calculating ratings from ', rounds, ' as of ', asOfDate)
     if (!rounds.length) {
         return 0;
     }
@@ -15,7 +16,7 @@ export function calculateRating(rounds: Round[], asOfDate?: Date) {
     let allRounds = [...sortedRounds, ...doubleRatedRounds];
 
     let calculatedRating = allRounds.reduce((sum, next) => {
-        return sum + next.roundRating;
+        return sum + Number(next.roundRating);
     },0) / allRounds.length;
 
     return Math.round(calculatedRating);

@@ -1,11 +1,13 @@
-const merge = require('webpack-merge');
-const common = require('./webpack.common.js');
-const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+import { merge } from 'webpack-merge';
+import common from './webpack.common.js';
+import path from 'path';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
+import { VueLoaderPlugin } from 'vue-loader';
+
+const __dirname = path.resolve();
 
 
-module.exports = merge(common, {
+export default merge(common, {
     mode: 'production',
     devtool: 'source-map',
     output: {
@@ -13,13 +15,14 @@ module.exports = merge(common, {
         filename: "[name].js"
     },
     plugins: [
-        new CopyWebpackPlugin([{
+        new CopyWebpackPlugin({
+            patterns: [{
             from: './src/manifest.json',
             to: path.resolve(__dirname, `dist-prod`)
         }, {
             from: './src/icons',
             to: path.resolve(__dirname, `dist-prod/icons`)
-        }, ]),
+        }, ]}),
         new VueLoaderPlugin()
     ]
 });

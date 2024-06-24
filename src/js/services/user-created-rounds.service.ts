@@ -84,7 +84,9 @@ class UserCreatedRounds {
         let dropped = this.currentRating - newRoundRating > 100 || this.currentRating - newRoundRating > (2.5*this.standardDeviation);
 
         let updatedRound = Object.assign({}, roundToUpdate, round, {
-            dropped
+            dropped,
+            roundRating: newRoundRating
+            
         });
         
         updatedPlayerRounds[roundToUpdate.id] = updatedRound;

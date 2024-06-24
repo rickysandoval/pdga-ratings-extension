@@ -117,7 +117,7 @@ export default {
             <a href="#" v-on:click.prevent="undoClearRounds()">Undo clear rounds</a>
           </p>
           <p>
-            <a href="#" v-on:click.prevent="openRound(null)">Adding a round</a> to see how it will affect your rating
+            <a href="#" v-on:click.prevent="openRound(null)">Add a round</a> to see how it will affect your rating
           </p>
         </template>
       </div>

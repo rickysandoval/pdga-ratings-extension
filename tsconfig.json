@@ -7,6 +7,10 @@
       "allowJs": true,
       "outDir": "./dist/",
       "noImplicitThis": true,
-      "typeRoots": ["node_modules/@types", "node_modules/web-ext-types"]
-    }
+      "typeRoots": ["node_modules/@types", "node_modules/web-ext-types"],
+      "skipLibCheck": true
+    },
+    "include": [
+      "."
+    ],
   }

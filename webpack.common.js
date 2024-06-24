@@ -1,9 +1,8 @@
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
-module.exports = {
+export default {
     entry: {
         'ratings-detail-page': './src/js/content-scripts/ratings-detail-page.ts',
-        'background': './src/js/background/background.ts',
         'content-script': ["./src/scss/content-script.scss"]
     },
     module: {

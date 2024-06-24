@@ -1,13 +1,15 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "PDGA Rating Tools",
     "author": "Ricky Sandoval",
     "version": "1.0.1",
     "description": "Extension to add useful features to the PDGA website's Ratings Detail page for disc golfers ",
     "permissions": [
-        "*://*.pdga.com/*",
         "storage",
         "webNavigation"
+    ],
+    "host_permissions": [
+        "*://*.pdga.com/*"
     ],
     "content_scripts": [{
         "matches": [
@@ -20,12 +22,6 @@
             "styles/content-script.css"
         ]
     }],
-    "background": {
-        "scripts": [
-            "js/background.js"
-        ],
-        "persistent": true
-    },
     "icons": {
         "16": "icons/frisbee-16.png",
         "48": "icons/frisbee-48.png",

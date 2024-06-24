@@ -1,0 +1,11 @@
+{
+    "extends": ["plugin:vue/base", "airbnb-base", "airbnb-typescript"],
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "rules": {
+        "vue/no-use-v-if-with-v-for": ["error", {
+            "allowUsingIterationVar": true
+          }]
+    }
+}
