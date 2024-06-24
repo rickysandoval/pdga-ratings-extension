@@ -27,7 +27,7 @@ export function documentReady(fn) {
 
 export function roundSort(a,b) {
     if (a.roundDate === b.roundDate) {
-        return a.roundNumber > b.roundNumber ? -1 : 1;
+        return a.roundNumber < b.roundNumber ? -1 : 1;
     } else {
         return a.roundDate > b.roundDate ? -1 : 1;
     }

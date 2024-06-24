@@ -1,5 +1,6 @@
 import { Round } from "../vos/round.vo";
-import { calculateRating } from "./ratings-utils"
+import { calculateRating, getIncludedAndDroppedRounds } from "./ratings-utils"
+import { erich, joe, ricky } from "./test-data";
 
 
 
@@ -51,7 +52,7 @@ describe('calculateRating', () => {
     }))
 
     it('will double weight the most recent 25% of rounds', () => {
-      expect(calculateRating(rounds)).toBe(973);
+      expect(calculateRating(rounds)).toBe(975);
     })
   })
 
@@ -119,6 +120,25 @@ describe('calculateRating', () => {
       }));
 
       expect(calculateRating([...roundsLastYear, ...roundsLastYear, ...roundsTwoYearsAgo])).toBe(1000)
+    })
+  })
+
+  describe('test against PDGA numbers', () => {
+    it('test ricky sandoval', () => {
+      const { dropped } = getIncludedAndDroppedRounds(ricky.rounds);
+      expect(calculateRating(ricky.rounds)).toBe(ricky.rating)
+      expect(dropped.length).toBe(3);
+    })
+
+    it('test joe rovere', () => {
+      const { dropped } = getIncludedAndDroppedRounds(joe.rounds);
+      expect(calculateRating(joe.rounds)).toBe(joe.rating)
+      expect(dropped.length).toBe(0);
+    })
+
+    it('test erich ward', () => {
+      const { dropped } = getIncludedAndDroppedRounds(erich.rounds);
+      expect(calculateRating(erich.rounds)).toBe(erich.rating)
     })
   })
 })

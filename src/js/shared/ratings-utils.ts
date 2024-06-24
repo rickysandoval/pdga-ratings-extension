@@ -1,7 +1,8 @@
 import { Round } from "../vos/round.vo";
 import { debugLog, roundSort } from "./utils";
 
-const yearInMilliseconds = 365 * 24 * 60 * 60 * 1000;
+const dayInMilliseconds = 24 * 60 * 60 * 1000;
+const yearInMilliseconds = 365 * dayInMilliseconds;
 
 export function sortRoundsByDate(rounds: Round[]) {
     return [...rounds]
@@ -18,7 +19,7 @@ export function getIncludedAndDroppedRounds(rounds: Round[]) {
 
     const mostRecentRound = roundsSortedByDate[0];
     const roundsInLastTwoYears = roundsSortedByDate.filter(round => round.roundDate >= mostRecentRound.roundDate - (2 * yearInMilliseconds));
-    const roundsInLastYear = roundsSortedByDate.filter(round => round.roundDate >= mostRecentRound.roundDate - yearInMilliseconds);
+    const roundsInLastYear = roundsSortedByDate.filter(round => round.roundDate >= mostRecentRound.roundDate - yearInMilliseconds - dayInMilliseconds);
 
     const roundsIncludedInRating = roundsInLastYear.length >= 8 ? roundsInLastYear : roundsInLastTwoYears.slice(0, 8);
 
@@ -45,7 +46,7 @@ export function calculateRating(_rounds: Round[], asOfDate?: Date) {
     // Sort by date
     // Number of rounds and date stuff
     // Calculate if round gets dropped
-    const numDoubleRatedRounds = roundsIncludedInRating.length >= 9 ? Math.round(roundsIncludedInRating.length / 4) : 0;
+    const numDoubleRatedRounds = roundsIncludedInRating.length >= 9 ? Math.ceil(roundsIncludedInRating.length / 4) : 0;
     const doubleRatedRounds = roundsIncludedInRating.slice(0,numDoubleRatedRounds);
     
     const allRounds = [...roundsIncludedInRating, ...doubleRatedRounds];
@@ -54,5 +55,5 @@ export function calculateRating(_rounds: Round[], asOfDate?: Date) {
         return sum + Number(next.roundRating);
     },0) / allRounds.length;
 
-    return Math.round(calculatedRating);
+    return Math.ceil(calculatedRating);
 }

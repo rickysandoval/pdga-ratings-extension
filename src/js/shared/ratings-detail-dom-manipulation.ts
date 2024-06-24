@@ -44,7 +44,8 @@ export function getPdgaNumber(): string {
 function roundFromRow(roundElement: Element) {
     let roundDateText = roundElement.querySelector('.date').textContent;
     if (roundDateText.indexOf(' to ') >= 0) {
-        roundDateText = roundDateText.split(' to ')[1];
+        const [, end] = roundDateText.split(' to ');
+        roundDateText = end
     }
 
     let tournamentName = roundElement.querySelector('.tournament').textContent;
