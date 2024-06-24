@@ -6,7 +6,13 @@ export function calculateRating(rounds: Round[], asOfDate?: Date) {
     if (!rounds.length) {
         return 0;
     }
-    let sortedRounds = [...rounds].sort(roundSort);
+    let sortedRounds = [...rounds]
+    .map(round => ({
+        ...round,
+        roundRating: Number(round.roundRating)
+    }))
+    .filter(round => !Number.isNaN(Number(round.roundRating)))
+    .sort(roundSort);
     // Sort by date?
     // Number of rounds and date stuff
     // Calculate if round gets dropped

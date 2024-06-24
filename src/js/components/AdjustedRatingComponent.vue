@@ -70,6 +70,7 @@ export default {
     <div class="panel-pane panel-adjusted-rating">
       <h2 class="panel-title">Adjusted Rating</h2>
       <div class="pane-content">
+
         <template v-if="rounds && rounds.length && adjustedRating">
           <div class="adjusted-rating">
             {{adjustedRating}}
@@ -81,6 +82,16 @@ export default {
             >{{this.adjustedRating < this.currentRating ? '-' : '+'}}{{Math.abs(this.adjustedRating - this.currentRating)}}</a>
           </div>
 
+          <div style="margin-top: 10px;">
+            <a href="#" v-on:click.prevent="openRound(null)">Add another round</a>
+          </div>
+          <p style="margin-top: 5px;">
+            <a
+              href="#"
+              class="clear-rounds"
+              v-on:click.prevent="clearRounds()"
+            >Clear all added rounds</a>
+          </p>
           <p>Based on {{rounds.length}} new rounds:</p>
           <ul class="info-list">
             <li v-for="round in rounds">
@@ -104,13 +115,6 @@ export default {
               </li>
             </ul>
           </template>
-          <p>
-            <a
-              href="#"
-              class="clear-rounds"
-              v-on:click.prevent="clearRounds()"
-            >Clear all added rounds</a>
-          </p>
         </template>
         <template v-if="!(rounds && rounds.length && adjustedRating)">
           <p v-if="clearedRounds">

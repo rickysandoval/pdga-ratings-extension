@@ -36,7 +36,7 @@ export default {
         tournamentName: this.form.tournamentName || "",
         roundNumber: this.form.roundNumber || 1,
         roundDate: date.getTime(),
-        roundRating: this.form.roundRating
+        roundRating: this.form.roundRating || 800
       };
       if (this.savedRound) {
         UserCreatedRoundsService.updateRound(this.savedRound, newRound).subscribe(
