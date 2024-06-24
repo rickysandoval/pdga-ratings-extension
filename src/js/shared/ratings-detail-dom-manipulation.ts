@@ -75,7 +75,7 @@ export function addRoundsAndFormat(rounds: SavedRound[]) {
     let lastAddedRoundDate = rounds.length ? rounds[0].roundDate : null;
     let includedRoundRows = Array.from(document.querySelectorAll('#player-results-details tbody tr.included'));
 
-    let countIncludedSoFar = 0;
+    let countIncludedSoFar = rounds.length;
     includedRoundRows.forEach(roundElement => {
         let roundDateText = roundElement.querySelector('.date').textContent;
         if (roundDateText.indexOf(' to ') >= 0) {
