@@ -1,12 +1,13 @@
 {
   "name": "pdga-extension",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Extension to add useful features to the PDGA website for disc golfers ",
   "main": "index.js",
   "scripts": {
     "start": "webpack --config webpack.dev.js --watch",
     "build": "webpack --config webpack.prod.js",
-    "lint": "tsc && eslint"
+    "lint": "tsc && eslint",
+    "test": "NODE_ENV=test jest"
   },
   "author": "Ricky Sandoval",
   "license": "ISC",
@@ -14,6 +15,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.0",
     "@types/chrome": "0.0.268",
+    "@types/jest": "^29.5.12",
     "@types/node": "^18",
     "babel-loader": "^9.1.3",
     "copy-webpack-plugin": "^12.0.2",
@@ -38,10 +40,12 @@
     "webpack-merge": "^5.10.0"
   },
   "dependencies": {
+    "babel-jest": "^29.7.0",
     "bootstrap-vue": "^2.0.0-rc.15",
     "eslint-config-airbnb": "^19.0.4",
     "jquery": "1.9.1 - 3",
     "rxjs": "^6.0.0",
+    "ts-jest": "^29.1.5",
     "vue": "^2.6.10",
     "vue-rx": "^6.1.0"
   }

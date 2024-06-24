@@ -1,5 +1,5 @@
 import { Round, SavedRound } from "../vos/round.vo";
-import { calculateRating } from "../shared/ratings-utils";
+import { calculateRating, getIncludedAndDroppedRounds } from "../shared/ratings-utils";
 import { getIncludedRounds, getCurrentRating, getPdgaNumber, addRoundsAndFormat } from "../shared/ratings-detail-dom-manipulation";
 import Vue from 'vue';
 import VueRx from 'vue-rx';
@@ -7,7 +7,7 @@ import BootstrapVue from 'bootstrap-vue';
 import { map, tap } from "rxjs/operators";
 
 import { UserCreatedRoundsService } from "../services/user-created-rounds.service";
-import { documentReady, roundSort, getStandardDeviation, debugLog } from "../shared/utils";
+import { documentReady, roundSort, debugLog } from "../shared/utils";
 import AddRoundFormComponent from '../components/AddRoundFormComponent.vue';
 import AdjustedRatingComponent from '../components/AdjustedRatingComponent.vue';
 
@@ -17,7 +17,10 @@ Vue.use(BootstrapVue);
 const eventHub = new Vue()
 
 
-documentReady(() => {
+documentReady(async () => {
+    await new Promise((resolve) => {
+        setTimeout(() => resolve(undefined), 100);
+    })
     /** Get Data */
     const includedRounds = getIncludedRounds();
     const currentRating = getCurrentRating();
@@ -52,29 +55,15 @@ documentReady(() => {
         map(hash => Object.values(hash)),
         map(rounds => [...rounds].sort(roundSort))
     );
-    savedRounds.subscribe(userAddedRounds => {
+    savedRounds.subscribe((userAddedRounds) => {
         debugLog('User added rounds: ', userAddedRounds)
-        let droppedIncludedRounds = [];
-        let nonDroppedIncludedRounds = [];
-        if (userAddedRounds.length) {
-            let lastAddedRoundDate = userAddedRounds[0].roundDate;
-            includedRounds.forEach(round => {
-            
-                if (lastAddedRoundDate - round.roundDate > 31536000000) {
-                    droppedIncludedRounds.push(round)
-                } else {
-                    nonDroppedIncludedRounds.push(round)
-                }
-            });
-        } else {
-            nonDroppedIncludedRounds = [...includedRounds];
-        }
-       
-
-        let calculatedRating = calculateRating([...userAddedRounds.filter(round => !round.dropped), ...nonDroppedIncludedRounds]);
+    
+        const allRounds = [...(userAddedRounds || []).filter(round => !round.dropped), ...includedRounds];
+        const { dropped } = getIncludedAndDroppedRounds(allRounds);
+        let calculatedRating = calculateRating(allRounds);
         addRoundsAndFormat(userAddedRounds);
         AdjustedRatingApp.adjustedRating = calculatedRating;
-        AdjustedRatingApp.droppedRounds = droppedIncludedRounds;
+        AdjustedRatingApp.droppedRounds = dropped;
     });
 
     let userRoundControls = document.createElement('div');

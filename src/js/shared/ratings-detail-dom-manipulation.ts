@@ -17,6 +17,9 @@ export function getDoubleWeightedRoundRows() {
             round: roundFromRow(row)
         };
     });
+    if (rounds.length < 9) {
+        return [];
+    }
     rounds.sort(roundSort);
     let numDoubleRatedRounds = Math.round(rounds.length / 4);
     let doubleRatedRounds = rounds.slice(0, numDoubleRatedRounds);
@@ -71,6 +74,7 @@ export function addRoundsAndFormat(rounds: SavedRound[]) {
     let lastAddedRoundDate = rounds.length ? rounds[0].roundDate : null;
     let includedRoundRows = Array.from(document.querySelectorAll('#player-results-details tbody tr.included'));
 
+    let countIncludedSoFar = 0;
     includedRoundRows.forEach(roundElement => {
         let roundDateText = roundElement.querySelector('.date').textContent;
         if (roundDateText.indexOf(' to ') >= 0) {
@@ -78,13 +82,16 @@ export function addRoundsAndFormat(rounds: SavedRound[]) {
         }
 
         let roundDate = new Date(roundDateText).getTime();
-        if (lastAddedRoundDate && lastAddedRoundDate - roundDate > 31536000000) {
+        const roundIsMoreThanOneYearOld = lastAddedRoundDate - roundDate > 31536000000;
+        const roundIsMoreThanTwoYearsOld = lastAddedRoundDate - roundDate > 31536000000 * 2;
+        if (lastAddedRoundDate && (roundIsMoreThanTwoYearsOld || roundIsMoreThanOneYearOld && countIncludedSoFar >= 8) ) {
             roundElement.classList.remove('included');
             roundElement.classList.remove('evaluated');
             roundElement.classList.add('not-included');
             roundElement.classList.add('user-adjusted');
             roundElement.classList.add('not-evaluated');
         }
+        countIncludedSoFar += 1;
     });
 
 
