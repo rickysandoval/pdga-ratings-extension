@@ -5,8 +5,7 @@
     "version": "1.3.0",
     "description": "Extension to add useful features to the PDGA website's Ratings Detail page for disc golfers ",
     "permissions": [
-        "storage",
-        "webNavigation"
+        "storage"
     ],
     "host_permissions": [
         "*://*.pdga.com/*"
