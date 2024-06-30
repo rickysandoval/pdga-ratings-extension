@@ -12,7 +12,8 @@ export default {
         tournamentName: "",
         roundNumber: null,
         roundDate: new Date().toISOString().substring(0, 10),
-        roundRating: null
+        roundRating: null,
+        holes: null,
       }
     };
   },
@@ -36,7 +37,8 @@ export default {
         tournamentName: this.form.tournamentName || "",
         roundNumber: this.form.roundNumber || 1,
         roundDate: date.getTime(),
-        roundRating: this.form.roundRating || 800
+        roundRating: this.form.roundRating || 800,
+        holes: this.form.holes || 18,
       };
       if (this.savedRound) {
         UserCreatedRoundsService.updateRound(this.savedRound, newRound).subscribe(
@@ -105,6 +107,14 @@ export default {
             max="1200"
             v-model="form.roundRating"
             placeholder="Round Rating"
+          />
+          <b-form-input
+            id="holes"
+            type="number"
+            min="6"
+            max="100"
+            v-model="form.holes"
+            placeholder="Number of Holes (defaults to 18)"
           />
           <div class="cf">
             <a class="delete-round" v-if="savedRound" v-on:click="deleteRound()">Delete</a>

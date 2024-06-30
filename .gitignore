@@ -4,4 +4,4 @@ dist-prod
 dist
 .DS*
 dist*
-.DS_store
+.DS_Store

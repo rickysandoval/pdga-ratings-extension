@@ -11,7 +11,7 @@ import { getIncludedRounds, getCurrentRating } from '../shared/ratings-detail-do
 class UserCreatedRounds {
     savedRounds: Observable<SimpleHash<SimpleHash<SavedRound>>>;
     private includedRounds: Round[];
-    private standardDeviation: number;
+    standardDeviation: number;
     currentRating: number;
     private savedRoundsSubject: BehaviorSubject<SimpleHash<SimpleHash<SavedRound>>>;
 
@@ -38,17 +38,18 @@ class UserCreatedRounds {
     }
 
     addRound(round: Round, pdgaNumber: string): Observable<SavedRound> {
-        let id = generateUniqueId();
-        let savedRounds = this.savedRoundsSubject.getValue();
-        let playerRounds = Object.assign({}, savedRounds[pdgaNumber] || {});
-        let newRoundRating = parseInt('' + round.roundRating);
-        let dropped = this.currentRating - newRoundRating > 100 || this.currentRating - newRoundRating > (2.5*this.standardDeviation);
-        let createdRound = <SavedRound>Object.assign({}, round, {
+        const id = generateUniqueId();
+        const savedRounds = this.savedRoundsSubject.getValue();
+        const playerRounds = Object.assign({}, savedRounds[pdgaNumber] || {});
+        const roundRating = parseInt('' + round.roundRating);
+        const dropped = this.currentRating - roundRating > 100 || this.currentRating - roundRating > (2.5*this.standardDeviation);
+        const createdRound = <SavedRound>Object.assign({}, round, {
             id,
             pdgaNumber,
             dropped,
-            roundRating: newRoundRating,
+            roundRating: roundRating,
             roundNumber: parseInt('' + round.roundNumber),
+            holes: parseInt('' + (round.holes || 18)),
         });
         // console.log(round, createdRound);
         // TODO: when ratings updated, re-calculate dropped rounds
@@ -85,8 +86,8 @@ class UserCreatedRounds {
 
         let updatedRound = Object.assign({}, roundToUpdate, round, {
             dropped,
-            roundRating: newRoundRating
-            
+            roundRating: newRoundRating,
+            holes: parseInt('' + (round.holes || 18)),
         });
         
         updatedPlayerRounds[roundToUpdate.id] = updatedRound;

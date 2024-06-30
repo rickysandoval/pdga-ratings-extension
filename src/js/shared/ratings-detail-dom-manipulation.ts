@@ -1,5 +1,5 @@
 import { Round, SavedRound } from "../vos/round.vo";
-import { roundSort } from "./utils";
+import { debugLog, roundSort } from "./utils";
 
 export function getIncludedRounds(): Round[] {
     let roundRows = document.querySelectorAll('#player-results-details tbody tr.included');
@@ -48,17 +48,23 @@ function roundFromRow(roundElement: Element) {
         roundDateText = end
     }
 
-    let tournamentName = roundElement.querySelector('.tournament').textContent;
-    let roundNumber = parseInt(roundElement.querySelector('.round').textContent);
-    let roundDate = new Date(roundDateText).getTime();
-    let roundRating = parseInt(roundElement.querySelector('.round-rating').textContent);
+    const tournamentName = roundElement.querySelector('.tournament').textContent;
+    const roundNumber = parseInt(roundElement.querySelector('.round').textContent);
+    const tooltipId = (roundElement.querySelector('.round') as HTMLElement).dataset.tooltipContent
+    const tooltipContent = document.querySelector(tooltipId)?.textContent;
+    const holesText = /; (\d+) holes;/.exec(tooltipContent)?.[1];
+    const numberOfHoles = holesText ? Number(holesText) : 18;
+    const roundDate = new Date(roundDateText).getTime();
+    const roundRating = parseInt(roundElement.querySelector('.round-rating').textContent);
 
-    return <Round>{
+    const round: Round = {
         tournamentName,
         roundNumber,
         roundDate,
-        roundRating
-    };
+        roundRating,
+        holes: numberOfHoles,
+    }
+    return round;
 }
 
 export function addRoundsAndFormat(rounds: SavedRound[]) {
@@ -131,4 +137,18 @@ export function addRoundsAndFormat(rounds: SavedRound[]) {
     doubleWeightedRows.forEach(element => {
         element.querySelector('.round-rating').classList.add('double-weighted-round');
     });
+}
+
+export function addRoundDroppedScore(standardDeviation: number, scoreDropped: number) {
+    debugLog("Round dropped: ", scoreDropped);
+    debugLog("Standard deviation: ", standardDeviation);
+
+    const standardDeviationElement = document.createElement('div');
+    const roundDroppedElement = document.createElement('div');
+    standardDeviationElement.innerHTML = `Standard Deviation: <strong>${standardDeviation.toFixed(2)}</strong>`;
+    roundDroppedElement.innerHTML = `Round dropped if below: <strong>${scoreDropped}</strong>`;
+
+    const ratingsDetailTitleElement = document.querySelector('.pane-player-player-stats .pane-title');
+    ratingsDetailTitleElement.insertAdjacentElement('afterend', roundDroppedElement);
+    ratingsDetailTitleElement.insertAdjacentElement('afterend', standardDeviationElement);
 }

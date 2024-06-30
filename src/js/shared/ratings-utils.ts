@@ -29,7 +29,7 @@ export function getIncludedAndDroppedRounds(rounds: Round[]) {
     }
 }
 
-export function calculateRating(_rounds: Round[], asOfDate?: Date) {
+export function calculateRating(_rounds: Round[]) {
 
     if (!_rounds.length) {
         return 0;
@@ -39,10 +39,10 @@ export function calculateRating(_rounds: Round[], asOfDate?: Date) {
         included: roundsIncludedInRating
     } = getIncludedAndDroppedRounds(_rounds);
 
-    debugLog('Calculating ratings from ', roundsIncludedInRating.map(round => ({
+    debugLog('Calculating ratings from ', JSON.stringify(roundsIncludedInRating.map(round => ({
         ...round,
-        roundDate: new Date(round.roundDate)
-    })), ' as of ', asOfDate)
+        roundDate: new Date(round.roundDate).getTime()
+    }), null)))
     // Sort by date
     // Number of rounds and date stuff
     // Calculate if round gets dropped
@@ -51,9 +51,17 @@ export function calculateRating(_rounds: Round[], asOfDate?: Date) {
     
     const allRounds = [...roundsIncludedInRating, ...doubleRatedRounds];
 
-    const calculatedRating = allRounds.reduce((sum, next) => {
-        return sum + Number(next.roundRating);
-    },0) / allRounds.length;
+    const { sum, weights } = allRounds.reduce((soFar, next) => {
+        const roundWeight = (next.holes || 18)/18;
 
-    return Math.ceil(calculatedRating);
+        return {
+            sum: soFar.sum + (next.roundRating * roundWeight),
+            weights: soFar.weights + roundWeight
+        }
+    }, {
+        sum: 0,
+        weights: 0,
+    });
+    const calculatedRating = sum/weights;
+    return Math.round(calculatedRating);
 }

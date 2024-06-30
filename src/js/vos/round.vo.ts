@@ -3,6 +3,7 @@ export interface Round {
     roundNumber: number;
     roundDate: number;
     roundRating: number;
+    holes: number;
 }
 
 export interface SavedRound extends Round {

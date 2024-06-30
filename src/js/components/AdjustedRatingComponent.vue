@@ -68,7 +68,7 @@ export default {
 <template>
   <div>
     <div class="panel-pane panel-adjusted-rating">
-      <h2 class="panel-title">Adjusted Rating</h2>
+      <h2 class="panel-title">Estimated Adjusted Rating</h2>
       <div class="pane-content">
 
         <template v-if="rounds && rounds.length && adjustedRating">
