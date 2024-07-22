@@ -143,12 +143,32 @@ export function addRoundDroppedScore(standardDeviation: number, scoreDropped: nu
     debugLog("Round dropped: ", scoreDropped);
     debugLog("Standard deviation: ", standardDeviation);
 
-    const standardDeviationElement = document.createElement('div');
-    const roundDroppedElement = document.createElement('div');
+    const standardDeviationId = 'standard-deviation-element';
+    const roundDroppedId = 'round-dropped-element';
+
+    let standardDeviationElement = document.getElementById(standardDeviationId);
+    let roundDroppedElement = document.getElementById(roundDroppedId);
+
+    if (!standardDeviationElement) {
+        standardDeviationElement = document.createElement('div');
+        standardDeviationElement.id = standardDeviationId;
+    }
+    
+    if (!roundDroppedElement) {
+        roundDroppedElement = document.createElement('div');
+        roundDroppedElement.id = roundDroppedId;
+    }
+
     standardDeviationElement.innerHTML = `Standard Deviation: <strong>${standardDeviation.toFixed(2)}</strong>`;
     roundDroppedElement.innerHTML = `Round dropped if below: <strong>${scoreDropped}</strong>`;
 
     const ratingsDetailTitleElement = document.querySelector('.pane-player-player-stats .pane-title');
-    ratingsDetailTitleElement.insertAdjacentElement('afterend', roundDroppedElement);
-    ratingsDetailTitleElement.insertAdjacentElement('afterend', standardDeviationElement);
+    if (ratingsDetailTitleElement) {
+        if (!document.getElementById(standardDeviationId)) {
+            ratingsDetailTitleElement.insertAdjacentElement('afterend', standardDeviationElement);
+        }
+        if (!document.getElementById(roundDroppedId)) {
+            ratingsDetailTitleElement.insertAdjacentElement('afterend', roundDroppedElement);
+        }
+    }
 }
